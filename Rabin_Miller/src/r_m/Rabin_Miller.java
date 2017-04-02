@@ -3,59 +3,68 @@ import java.util.*;
 import java.math.*;
 public class Rabin_Miller {
 	Random generator=new Random();
-	public Rabin_Miller(int n){
+	BigInteger two=new BigInteger("2");
+	ArrayList<Integer> table = new ArrayList<Integer>();
+	public Rabin_Miller(BigInteger n,int iterations){
 		this.n=n;
+		this.iterations=iterations;
 		//this.a=a;
 	}
-	Scanner in=new Scanner(System.in);
-	
-	public void R_M(){
-		System.out.println("Ile testow chcesz przeprowadzic?");
-		int test=in.nextInt();
-		while(g<test){
-		a=generator.nextInt(n)+1;
-		if((n%2==0)||((gcd(n,a)>1)&&(gcd(n,a)<n))){
-			zwroczlozona();
-			break;
-		}
+	public int R_M(){
+		//System.out.println("Ile testow chcesz przeprowadzic?");
+		//int test=in.nextInt();
+		BigInteger nminus1=n.subtract(BigInteger.ONE);
+		do{
+			if(nminus1.mod(two.pow(a)).equals(BigInteger.ZERO)){
+				table.add(a);
+			}
+			iterator++;
+			a++;
+		}while(!(two.pow(a).compareTo(n)>0));
 		
-		while(q1%2==0)
-		{
-			q1=(long)(n-1)/Math.pow(2, k);
-			k++;
-		} 
-		a2=BigInteger.valueOf(a);
-		a2=a2.modPow(BigInteger.valueOf((long)q1),BigInteger.valueOf(n));//(Math.pow(a, q1))));
-		//a2= a2.remainder(BigDecimal.valueOf(n));
-		comp1=a2.compareTo(BigInteger.valueOf(1));
-		if(comp1==0){
-			zwroctestfails();
-			l1++;
+		a=table.get(table.size()-1);
+		BigInteger m=nminus1.divide(two.pow(a));
+		int wlen=n.bitLength();
+		BigInteger b;
+		BigInteger z;
+		for(int i=0;i<iterations;i++){
+			int straznik=0;
+			int straznik1=0;
+			do{
+			 b=new BigInteger(wlen,new Random());
+			}while(!(b.compareTo(BigInteger.ONE)>0) && !(b.compareTo(nminus1)<0));
+			z=b.modPow(m, n);
+			if(z.equals(BigInteger.ONE) || z.equals(nminus1)){
+				continue;
+			}
+			else{
+				for(int j=0;j<a-1;j++){
+					z=z.pow(2).mod(n);
+					if(z.equals(nminus1)){
+						straznik++;
+						break;
+					}
+					if(z.equals(BigInteger.ONE)){
+						straznik1++;
+						break;
+					}
+				}
+				if(straznik==1){
+					continue;
+				}
+				
+				if(straznik1==1){
+					getComposite();
+					return 0;
+				}
+				}
+			getComposite();
+			return 0;
 		}
-		a3=BigInteger.valueOf(a);
-		a3=a3.modPow(BigInteger.valueOf((long)q1),BigInteger.valueOf(n));
-		while((i<=k-1)&&(l<1)){
-			//a3=BigInteger.valueOf(a);
-			//a3=a3.modPow(BigInteger.valueOf((long)q1),BigInteger.valueOf(n));
-			comp3=a3.compareTo(BigInteger.valueOf(n-1));
-			if(comp3==0){
-				zwroctestfails();
-				l++;}
-			a3=BigInteger.valueOf(a);
-			wyk=(long)Math.pow(2, i);
-			a3=a3.modPow(BigInteger.valueOf((long)q1).multiply(BigInteger.valueOf(wyk)),BigInteger.valueOf(n));
-			//a3=(long)((Math.pow(a, wyk*q1)));
-			//a3=a3%n;
-			i++;
+		getProbablyPrime();
+		return 1;
 		}
-		if((l==0)&&(l1==0)){
-			zwroczlozona();
-		}
-		g++;
-		i=0;
-		l=0;
-		}
-	}
+
 	
 	
 	
@@ -77,12 +86,12 @@ public class Rabin_Miller {
 		}
 	
 	
-	public void zwroczlozona(){
+	public void getComposite(){
 		System.out.println("Testowana liczba jest z³o¿ona!");
 	}
 	
-	public void zwroctestfails(){
-		System.out.println("Test fails!Prawdopodobnie pierwsza!");
+	public void getProbablyPrime(){
+		System.out.println("Prawdopodobnie pierwsza!");
 	}
 	
 	long q;
@@ -92,8 +101,10 @@ public class Rabin_Miller {
 	long k=1;
 	double q1=0;
 	long wyk;
-	int n;
-	long a;
+	BigInteger n;
+	int iterations;
+	int a=0;
+	int iterator=0;
 	int i=0;
 	int l=0;
 	BigInteger a2;
