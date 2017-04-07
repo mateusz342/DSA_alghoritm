@@ -11,8 +11,6 @@ public class Rabin_Miller {
 		//this.a=a;
 	}
 	public int R_M(){
-		//System.out.println("Ile testow chcesz przeprowadzic?");
-		//int test=in.nextInt();
 		BigInteger nminus1=n.subtract(BigInteger.ONE);
 		do{
 			if(nminus1.mod(two.pow(a)).equals(BigInteger.ZERO)){

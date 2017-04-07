@@ -1,12 +1,13 @@
 package r_m;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Random generateRandom=new Random();
-		int p=1024;
-		int q=160;
+		int p=2048;
+		int q=256;
 		int seedlen;
 		do{
 		seedlen=generateRandom.nextInt(q*2);
@@ -16,8 +17,14 @@ public class Main {
 		generator.generatePrimes(p, q, seedlen);
 		BigInteger qtoDSA=generator.getq();
 		BigInteger ptoDSA=generator.getp();
-		byte[] pp=ptoDSA.toByteArray();
-		byte[] qq=qtoDSA.toByteArray();
+		DSA dsa=new DSA(ptoDSA,qtoDSA);
+		dsa.generator();
+		dsa.KeySet();
+		dsa.Compute();
+		BigInteger r=dsa.getr();
+		BigInteger s=dsa.gets();
+		byte[] readdocument=dsa.getReadDocument();
+		dsa.Verification(r, s, readdocument);
 		//a1.R_M();
 
 	}

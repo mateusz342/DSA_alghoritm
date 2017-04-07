@@ -55,7 +55,7 @@ public class Primes_Generator {
 		do{
 		domain_seed=new BigInteger(seedlen,new SecureRandom());
 		byte[] domain_parameter_seed=domain_seed.toByteArray();
-		byte[] hash=SHA1(domain_parameter_seed);
+		byte[] hash=SHA256(domain_parameter_seed);
 		BigInteger Hash=new BigInteger(hash);
 		int exponent=N-1;
 		BigInteger U=Hash.mod(two.pow(exponent));
@@ -78,7 +78,7 @@ public class Primes_Generator {
 			
 			BigInteger tohash=domain_seed.add(offset).add(BigInteger.valueOf(j)).mod(two.pow(seedlen));
 			byte[] bytehash=tohash.toByteArray();
-			byte[] hash=SHA1(bytehash);
+			byte[] hash=SHA256(bytehash);
 			BigInteger Hash=new BigInteger(hash);
 			V[j]=Hash;
 			
@@ -121,11 +121,11 @@ public class Primes_Generator {
 	}
 
 
-	private static byte[] SHA1(byte[] input){
+	private static byte[] SHA256(byte[] input){
 		MessageDigest md=null;
 		
 		try{
-			md=MessageDigest.getInstance("SHA-1");
+			md=MessageDigest.getInstance("SHA-256");
 		}
 		catch(NoSuchAlgorithmException e){
 			e.printStackTrace();
