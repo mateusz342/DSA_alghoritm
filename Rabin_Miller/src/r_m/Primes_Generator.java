@@ -12,7 +12,7 @@ public class Primes_Generator {
 	BigInteger p,q;
 	int l=0;
 	BigInteger two=new BigInteger("2");
-	int iterations=40;
+	int iterations=56;
 	BigInteger l1=new BigInteger("1024");
 	BigInteger l2=new BigInteger("2048");
 	BigInteger l3=new BigInteger("3072");
@@ -23,7 +23,7 @@ public class Primes_Generator {
 	BigInteger domain_seed;
 	int licznik=0;
 	
-	
+	//generation of probable primes p and q using SHA-256 hash function and Rabin-Miller test
 	public Object generatePrimes(int L,int N, int seedlen){
 		if(L==1024 && N==160){System.out.println("Bits length, ok!");}
 		else if(L==2048 && N==224){System.out.println("Bits length, ok!");}
@@ -120,7 +120,7 @@ public class Primes_Generator {
 		return 0;
 	}
 
-
+//SHA-256 hash function
 	private static byte[] SHA256(byte[] input){
 		MessageDigest md=null;
 		
@@ -133,7 +133,7 @@ public class Primes_Generator {
 		return md.digest(input);
 		
 	}
-	
+//pow for (BigInteger,BigInteger)
 	public BigInteger pow(BigInteger base, BigInteger exponent) {
 		  BigInteger result = BigInteger.ONE;
 		  while (exponent.signum() > 0) {

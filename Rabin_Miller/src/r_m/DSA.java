@@ -23,11 +23,13 @@ public class DSA {
 	byte[] readdocument;
 	BigInteger wynik;
 	BigInteger c;
+	BigInteger c1; 
 	
 	public DSA(BigInteger p, BigInteger q){
 		this.p=p;
 		this.q=q;
 	}
+	//generation of generator g
 	public void generator(){
 		BigInteger e;
 		e=p.subtract(BigInteger.ONE).divide(q);
@@ -46,7 +48,7 @@ public class DSA {
 		//return g;
 	}
 	
-	
+	//Assurance of the Validity of the Generator g
 	public int validategenerator(){
 		if (g.compareTo(two)<0 && ( g.compareTo(p.subtract(BigInteger.ONE))>0)){
 			getInvalid();
@@ -58,9 +60,13 @@ public class DSA {
 		getInvalid();
 		return 0;
 	}
-	
+	//KeySet of DSA
 	public void KeySet(){
-		k=new BigInteger(q.bitCount()-1 ,new SecureRandom());
+		do{
+			c1=new BigInteger(q.bitCount()+64,new SecureRandom());
+		}while(c1.compareTo(BigInteger.ZERO)<0);
+		//k=new BigInteger(q.bitCount()-1 ,new SecureRandom());
+		k=(c1.mod(q.subtract(BigInteger.ONE))).add(BigInteger.ONE);
 		do{
 		c= new BigInteger(q.bitCount()+64, new SecureRandom());
 		}while(c.compareTo(BigInteger.ZERO)<0);
@@ -72,13 +78,13 @@ public class DSA {
 		this.x=x;
 		this.y=y;
 }
-	
+	//calculation of the parameters for DSA
 	public void Compute() throws IOException{
 		r=(g.modPow(k, p)).mod(q);
 		BigInteger s1=k.modInverse(q);
 		readdocument=readDocument();
-		byte[] SHA1out=SHA256(readdocument);
-		m=new BigInteger(SHA1out);
+		byte[] SHA2out=SHA256(readdocument);
+		m=new BigInteger(SHA2out);
 		//BigInteger message1= new BigInteger(message);
 		s=(s1.multiply(m.add(x.multiply(r)))).mod(q);
 		
@@ -87,7 +93,7 @@ public class DSA {
 		this.readdocument=readdocument;
 		
 	}
-	
+	//DSA verification 
 	public void Verification(BigInteger r, BigInteger s, byte[] readdocument){
 		byte[] Message=SHA256(readdocument);
 		BigInteger m1=new BigInteger(Message);
@@ -103,7 +109,7 @@ public class DSA {
 			getSignatureinCorrect();
 		
 	}
-	
+	//read document method
 	public byte[] readDocument() throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader("D:/git/Rabin_Miller/src/document.txt"));
 		String everything;
@@ -124,7 +130,7 @@ public class DSA {
 		return message;
 	}
 	
-	
+	//SHA256 hash function
 	private static byte[] SHA256(byte[] input){
 		MessageDigest md=null;
 		
@@ -147,23 +153,6 @@ public class DSA {
 		  }
 		  return result;
 		}
-
-	public BigInteger al_szybkiego_potegowania(BigInteger wykladnik,BigInteger podstawa){
-		wynik=BigInteger.valueOf(1);
-		while(wykladnik.compareTo(BigInteger.ZERO)>0){
-			if(wykladnik.mod(two).equals(BigInteger.ONE)){
-				wynik=wynik.multiply(podstawa);
-				wykladnik=wykladnik.divide(two);
-				podstawa=podstawa.multiply(podstawa);
-				}
-			else{
-				wykladnik.divide(two);
-				podstawa=podstawa.multiply(podstawa);
-			}
-		}
-		return wynik.mod(p);
-}
-	
 	
 	public BigInteger getr(){
 		return r;

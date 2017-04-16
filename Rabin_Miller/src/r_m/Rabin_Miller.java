@@ -10,6 +10,8 @@ public class Rabin_Miller {
 		this.iterations=iterations;
 		//this.a=a;
 	}
+	
+	//Miller-Rabin test according to fips_186-3(Appendix C.3.1)
 	public int R_M(){
 		BigInteger nminus1=n.subtract(BigInteger.ONE);
 		do{
@@ -62,27 +64,6 @@ public class Rabin_Miller {
 		getProbablyPrime();
 		return 1;
 		}
-
-	
-	
-	
-	public long gcd(long a1,long b){
-//		if(b>a){
-//			tmp=a;
-//			a=b;
-//			b=tmp;
-//			
-//		}
-		do{
-		q=a1/b;
-		c=b;
-		b=a1-q*b;
-		a1=c;
-	}
-	while(b>0);
-		return a1;
-		}
-	
 	
 	public void getComposite(){
 		System.out.println("Testowana liczba jest z³o¿ona!");
